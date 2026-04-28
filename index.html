@@ -118,7 +118,7 @@ header{border-bottom:1px solid var(--border);padding:32px 0 24px;margin-bottom:3
 
 <script>
 // WKLEJ URL Z APPS SCRIPT TUTAJ
-const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzB5okCQ0mjuvgBsGnIxnDicjWtVOjALKRgve2AYnkLuugXoR0jsfMV3m941M17Uz7--w/exec';
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbw0doRcyMpvaTxNHDvdOTg0AktkomAWuCMET0AzfwmT_y6qYDYW5ihSvGtitETlr5zKwg/exec';
 
 const JURORS = ['Bramari','Maja Wlazły','Paweł Gajewski'];
 const CRITERIA = ['technika','kompozycja','dojrzalosc','jakosc'];
@@ -151,11 +151,8 @@ async function loadData(){
 async function saveData(){
   setDot('busy','zapisywanie...');
   try{
-    const r=await fetch(SCRIPT_URL,{
-      method:'POST',
-      headers:{'Content-Type':'text/plain;charset=utf-8'},
-      body:JSON.stringify({scores})
-    });
+    const encoded=encodeURIComponent(JSON.stringify({scores}));
+    const r=await fetch(SCRIPT_URL+'?save='+encoded);
     if(r.ok)setDot('ok','zapisano');
     else setDot('err','błąd zapisu');
   }catch(e){setDot('err','błąd zapisu');}
