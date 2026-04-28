@@ -6,198 +6,68 @@
 <title>PERUN Handpan Music Festival — Panel Jury</title>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --bg: #0e0e0f;
-    --surface: #161618;
-    --surface2: #1e1e21;
-    --border: #2a2a2e;
-    --border2: #3a3a3f;
-    --gold: #c9a84c;
-    --gold2: #e8c96e;
-    --text: #e8e6e0;
-    --muted: #7a7870;
-    --muted2: #9a9890;
-    --danger: #e06060;
-    --success: #5a9e6f;
-    --font-display: 'Cormorant Garamond', serif;
-    --font-mono: 'DM Mono', monospace;
-  }
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: var(--font-mono);
-    font-size: 13px;
-    min-height: 100vh;
-  }
-  .grain {
-    position: fixed; inset: 0; pointer-events: none; z-index: 100;
-    opacity: 0.03;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
-  }
-  .container { max-width: 960px; margin: 0 auto; padding: 0 20px; }
-
-  header {
-    border-bottom: 1px solid var(--border);
-    padding: 32px 0 24px;
-    margin-bottom: 32px;
-  }
-  .header-inner { display: flex; align-items: flex-end; justify-content: space-between; flex-wrap: wrap; gap: 16px; }
-  .logo-area h1 {
-    font-family: var(--font-display);
-    font-size: 32px;
-    font-weight: 600;
-    letter-spacing: 0.02em;
-    color: var(--gold2);
-    line-height: 1;
-  }
-  .logo-area p {
-    font-size: 11px;
-    color: var(--muted);
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    margin-top: 6px;
-  }
-  .sync-indicator {
-    display: flex; align-items: center; gap: 8px;
-    font-size: 11px; color: var(--muted);
-    letter-spacing: 0.06em;
-  }
-  .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--muted); transition: background 0.3s; }
-  .dot.ok { background: var(--success); box-shadow: 0 0 6px var(--success); }
-  .dot.busy { background: var(--gold); animation: pulse 1s infinite; }
-  .dot.err { background: var(--danger); }
-  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
-
-  .juror-bar {
-    display: flex; gap: 8px; flex-wrap: wrap;
-    margin-bottom: 28px;
-  }
-  .juror-btn {
-    padding: 8px 18px;
-    border: 1px solid var(--border2);
-    background: transparent;
-    color: var(--muted2);
-    font-family: var(--font-mono);
-    font-size: 12px;
-    letter-spacing: 0.08em;
-    cursor: pointer;
-    transition: all 0.15s;
-    border-radius: 2px;
-  }
-  .juror-btn:hover { border-color: var(--gold); color: var(--gold); }
-  .juror-btn.active {
-    background: var(--gold);
-    border-color: var(--gold);
-    color: #0e0e0f;
-    font-weight: 500;
-  }
-  .tab-summary.active { background: var(--surface2); border-color: var(--border2); color: var(--text); }
-
-  .view { display: none; }
-  .view.active { display: block; }
-
-  .scoring-grid { border: 1px solid var(--border); border-radius: 4px; overflow: hidden; }
-  .grid-header {
-    display: grid;
-    grid-template-columns: 28px 1fr 80px 80px 80px 80px 70px;
-    background: var(--surface2);
-    border-bottom: 1px solid var(--border);
-    padding: 10px 14px;
-    gap: 8px;
-  }
-  .grid-header span {
-    font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase;
-    color: var(--muted); text-align: center;
-  }
-  .grid-header span:nth-child(2) { text-align: left; }
-  .grid-row {
-    display: grid;
-    grid-template-columns: 28px 1fr 80px 80px 80px 80px 70px;
-    padding: 10px 14px;
-    gap: 8px;
-    align-items: center;
-    border-bottom: 1px solid var(--border);
-    transition: background 0.1s;
-  }
-  .grid-row:last-child { border-bottom: none; }
-  .grid-row:hover { background: var(--surface); }
-  .row-num { color: var(--muted); font-size: 11px; text-align: center; }
-  .row-name { color: var(--text); font-size: 12px; letter-spacing: 0.02em; }
-  .score-cell { display: flex; justify-content: center; }
-  .score-input {
-    width: 52px; height: 32px;
-    background: var(--surface2);
-    border: 1px solid var(--border2);
-    border-radius: 2px;
-    color: var(--text);
-    font-family: var(--font-mono);
-    font-size: 13px;
-    text-align: center;
-    transition: border-color 0.15s, box-shadow 0.15s;
-    -moz-appearance: textfield;
-  }
-  .score-input::-webkit-outer-spin-button,
-  .score-input::-webkit-inner-spin-button { -webkit-appearance: none; }
-  .score-input:focus { outline: none; border-color: var(--gold); box-shadow: 0 0 0 2px rgba(201,168,76,0.15); }
-  .score-input:disabled { opacity: 0.3; cursor: not-allowed; }
-  .score-input.filled { border-color: var(--border2); color: var(--gold2); }
-  .total-cell { text-align: center; font-size: 14px; font-weight: 500; color: var(--muted); }
-  .total-cell.has-value { color: var(--gold2); }
-
-  .summary-grid { border: 1px solid var(--border); border-radius: 4px; overflow: hidden; }
-  .sum-header {
-    display: grid;
-    grid-template-columns: 32px 1fr 70px 70px 80px 80px;
-    background: var(--surface2);
-    border-bottom: 1px solid var(--border);
-    padding: 10px 14px; gap: 8px;
-  }
-  .sum-header span { font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); text-align: center; }
-  .sum-header span:nth-child(2) { text-align: left; }
-  .sum-row {
-    display: grid;
-    grid-template-columns: 32px 1fr 70px 70px 80px 80px;
-    padding: 10px 14px; gap: 8px;
-    align-items: center;
-    border-bottom: 1px solid var(--border);
-  }
-  .sum-row:last-child { border-bottom: none; }
-  .sum-row:nth-child(2) .rank { color: #d4a843; }
-  .sum-row:nth-child(3) .rank { color: #9aa0a6; }
-  .sum-row:nth-child(4) .rank { color: #a0735a; }
-  .rank { font-size: 12px; text-align: center; font-weight: 500; color: var(--muted); }
-  .sum-name { font-size: 12px; color: var(--text); }
-  .sum-score { text-align: center; font-size: 13px; color: var(--muted2); }
-  .sum-score.filled { color: var(--text); }
-  .grand-total { text-align: center; font-size: 15px; font-weight: 500; color: var(--gold2); }
-
-  .legend {
-    display: flex; gap: 20px; flex-wrap: wrap;
-    margin-top: 24px; padding-top: 20px;
-    border-top: 1px solid var(--border);
-    font-size: 11px; color: var(--muted); letter-spacing: 0.06em;
-  }
-  .legend span { text-transform: uppercase; }
-  .legend b { color: var(--muted2); }
-
-  @media (max-width: 700px) {
-    .grid-header, .grid-row {
-      grid-template-columns: 22px 1fr 58px 58px 58px 58px 54px;
-      padding: 8px 10px; gap: 4px;
-    }
-    .sum-header, .sum-row {
-      grid-template-columns: 26px 1fr 54px 54px 60px 60px;
-      padding: 8px 10px; gap: 4px;
-    }
-    .score-input { width: 44px; font-size: 12px; }
-    .logo-area h1 { font-size: 24px; }
-  }
+:root{--bg:#0e0e0f;--surface:#161618;--surface2:#1e1e21;--border:#2a2a2e;--border2:#3a3a3f;--gold:#c9a84c;--gold2:#e8c96e;--text:#e8e6e0;--muted:#7a7870;--muted2:#9a9890;--danger:#e06060;--success:#5a9e6f;--font-display:'Cormorant Garamond',serif;--font-mono:'DM Mono',monospace}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:var(--font-mono);font-size:13px;min-height:100vh}
+.container{max-width:960px;margin:0 auto;padding:0 20px}
+header{border-bottom:1px solid var(--border);padding:32px 0 24px;margin-bottom:32px}
+.header-inner{display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;gap:16px}
+.logo-area h1{font-family:var(--font-display);font-size:32px;font-weight:600;color:var(--gold2);line-height:1}
+.logo-area p{font-size:11px;color:var(--muted);letter-spacing:0.12em;text-transform:uppercase;margin-top:6px}
+.sync-indicator{display:flex;align-items:center;gap:8px;font-size:11px;color:var(--muted)}
+.dot{width:6px;height:6px;border-radius:50%;background:var(--muted);transition:background .3s}
+.dot.ok{background:var(--success);box-shadow:0 0 6px var(--success)}
+.dot.busy{background:var(--gold);animation:pulse 1s infinite}
+.dot.err{background:var(--danger)}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.juror-bar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:28px}
+.juror-btn{padding:8px 18px;border:1px solid var(--border2);background:transparent;color:var(--muted2);font-family:var(--font-mono);font-size:12px;letter-spacing:.08em;cursor:pointer;transition:all .15s;border-radius:2px}
+.juror-btn:hover{border-color:var(--gold);color:var(--gold)}
+.juror-btn.active{background:var(--gold);border-color:var(--gold);color:#0e0e0f;font-weight:500}
+.tab-summary.active{background:var(--surface2);border-color:var(--border2);color:var(--text)}
+.view{display:none}.view.active{display:block}
+.scoring-grid{border:1px solid var(--border);border-radius:4px;overflow:hidden}
+.grid-header{display:grid;grid-template-columns:28px 1fr 80px 80px 80px 80px 70px;background:var(--surface2);border-bottom:1px solid var(--border);padding:10px 14px;gap:8px}
+.grid-header span{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);text-align:center}
+.grid-header span:nth-child(2){text-align:left}
+.grid-row{display:grid;grid-template-columns:28px 1fr 80px 80px 80px 80px 70px;padding:10px 14px;gap:8px;align-items:center;border-bottom:1px solid var(--border);transition:background .1s}
+.grid-row:last-child{border-bottom:none}
+.grid-row:hover{background:var(--surface)}
+.row-num{color:var(--muted);font-size:11px;text-align:center}
+.row-name{color:var(--text);font-size:12px}
+.score-cell{display:flex;justify-content:center}
+.score-input{width:52px;height:32px;background:var(--surface2);border:1px solid var(--border2);border-radius:2px;color:var(--text);font-family:var(--font-mono);font-size:13px;text-align:center;transition:border-color .15s,box-shadow .15s;-moz-appearance:textfield}
+.score-input::-webkit-outer-spin-button,.score-input::-webkit-inner-spin-button{-webkit-appearance:none}
+.score-input:focus{outline:none;border-color:var(--gold);box-shadow:0 0 0 2px rgba(201,168,76,.15)}
+.score-input.filled{color:var(--gold2)}
+.total-cell{text-align:center;font-size:14px;font-weight:500;color:var(--muted)}
+.total-cell.has-value{color:var(--gold2)}
+.summary-grid{border:1px solid var(--border);border-radius:4px;overflow:hidden}
+.sum-header{display:grid;grid-template-columns:32px 1fr 70px 70px 80px 80px;background:var(--surface2);border-bottom:1px solid var(--border);padding:10px 14px;gap:8px}
+.sum-header span{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);text-align:center}
+.sum-header span:nth-child(2){text-align:left}
+.sum-row{display:grid;grid-template-columns:32px 1fr 70px 70px 80px 80px;padding:10px 14px;gap:8px;align-items:center;border-bottom:1px solid var(--border)}
+.sum-row:last-child{border-bottom:none}
+.sum-row:nth-child(2) .rank{color:#d4a843}
+.sum-row:nth-child(3) .rank{color:#9aa0a6}
+.sum-row:nth-child(4) .rank{color:#a0735a}
+.rank{font-size:12px;text-align:center;font-weight:500;color:var(--muted)}
+.sum-name{font-size:12px;color:var(--text)}
+.sum-score{text-align:center;font-size:13px;color:var(--muted2)}
+.sum-score.filled{color:var(--text)}
+.grand-total{text-align:center;font-size:15px;font-weight:500;color:var(--gold2)}
+.legend{display:flex;gap:20px;flex-wrap:wrap;margin-top:24px;padding-top:20px;border-top:1px solid var(--border);font-size:11px;color:var(--muted);letter-spacing:.06em}
+.legend span{text-transform:uppercase}
+.legend b{color:var(--muted2)}
+@media(max-width:700px){
+  .grid-header,.grid-row{grid-template-columns:22px 1fr 54px 54px 54px 54px 50px;padding:8px 10px;gap:4px}
+  .sum-header,.sum-row{grid-template-columns:26px 1fr 50px 50px 56px 56px;padding:8px 10px;gap:4px}
+  .score-input{width:44px;font-size:12px}
+  .logo-area h1{font-size:24px}
+}
 </style>
 </head>
 <body>
-<div class="grain"></div>
-
 <div class="container">
   <header>
     <div class="header-inner">
@@ -212,229 +82,161 @@
     </div>
   </header>
 
-  <div class="container">
-    <div class="juror-bar">
-      <button class="juror-btn active" onclick="setView('Bramari',this)">Bramari</button>
-      <button class="juror-btn" onclick="setView('Maja Wlazły',this)">Maja Wlazły</button>
-      <button class="juror-btn" onclick="setView('Paweł Gajewski',this)">Paweł Gajewski</button>
-      <button class="juror-btn tab-summary" onclick="setView('__summary__',this)">Zestawienie</button>
-    </div>
+  <div class="juror-bar">
+    <button class="juror-btn active" onclick="setView('Bramari',this)">Bramari</button>
+    <button class="juror-btn" onclick="setView('Maja Wlazły',this)">Maja Wlazły</button>
+    <button class="juror-btn" onclick="setView('Paweł Gajewski',this)">Paweł Gajewski</button>
+    <button class="juror-btn tab-summary" onclick="setView('__summary__',this)">Zestawienie</button>
+  </div>
 
-    <div class="view active" id="view-scoring">
-      <div class="scoring-grid">
-        <div class="grid-header">
-          <span>#</span><span>Uczestnik</span>
-          <span>Technika</span><span>Kompo&shy;zycja</span><span>Dojrza&shy;łość</span><span>Jakość nagr.</span>
-          <span>Suma</span>
-        </div>
-        <div id="rows"></div>
+  <div class="view active" id="view-scoring">
+    <div class="scoring-grid">
+      <div class="grid-header">
+        <span>#</span><span>Uczestnik</span>
+        <span>Technika</span><span>Kompozycja</span><span>Dojrzałość</span><span>Jakość nagr.</span>
+        <span>Suma</span>
       </div>
-      <div class="legend">
-        <span>Skala: <b>1 – 10</b> w każdym kryterium</span>
-        <span>Suma max: <b>40 pkt</b></span>
-        <span>Zapis: <b>automatyczny</b></span>
-      </div>
+      <div id="rows"></div>
     </div>
+    <div class="legend">
+      <span>Skala: <b>1–10</b> w każdym kryterium</span>
+      <span>Suma max: <b>40 pkt</b></span>
+      <span>Zapis: <b>automatyczny</b></span>
+    </div>
+  </div>
 
-    <div class="view" id="view-summary">
-      <div class="summary-grid">
-        <div class="sum-header">
-          <span>#</span><span>Uczestnik</span>
-          <span>Bramari</span><span>Maja W.</span><span>Paweł G.</span><span>Łącznie</span>
-        </div>
-        <div id="sum-rows"></div>
+  <div class="view" id="view-summary">
+    <div class="summary-grid">
+      <div class="sum-header">
+        <span>#</span><span>Uczestnik</span>
+        <span>Bramari</span><span>Maja W.</span><span>Paweł G.</span><span>Łącznie</span>
       </div>
+      <div id="sum-rows"></div>
     </div>
   </div>
 </div>
 
 <script>
-const API_KEY = '$2a$10$UjDy4EqsMjAW7i67TQKxSuVX8hhl27wp.oW1yXX3zgl9vCBpZrJNi';
-const BIN_ID = '69f0bb87aaba882197498e8d';
+// WKLEJ URL Z APPS SCRIPT TUTAJ
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzB5okCQ0mjuvgBsGnIxnDicjWtVOjALKRgve2AYnkLuugXoR0jsfMV3m941M17Uz7--w/exec';
+
+const JURORS = ['Bramari','Maja Wlazły','Paweł Gajewski'];
+const CRITERIA = ['technika','kompozycja','dojrzalosc','jakosc'];
+const PARTICIPANTS = [
+  'Piotr Dybała','Patryk Kmieć / Wojtek Kaźmierczak','Beniamin Niedźwiedź',
+  'Bogdan Kulik','Martyna Stefania Trzmiel','Kamil Amadeusz Adach',
+  'Michał Steffen','Maciej Chrzan','Jacek Ostański',
+  'Anna Piela / Kamil Żurek','Piotr Sch','Ilona Glinka'
+];
+
 let scores = {};
 let currentJuror = 'Bramari';
 let saveTimer = null;
 
-const JURORS = ['Bramari','Maja Wlazły','Paweł Gajewski'];
-const CRITERIA = ['technika','kompozycja','dojrzalosć','jakosc'];
-const PARTICIPANTS = [
-  'Piotr Dybała',
-  'Patryk Kmieć / Wojtek Kaźmierczak',
-  'Beniamin Niedźwiedź',
-  'Bogdan Kulik',
-  'Martyna Stefania Trzmiel',
-  'Kamil Amadeusz Adach',
-  'Michał Steffen',
-  'Maciej Chrzan',
-  'Jacek Ostański',
-  'Anna Piela / Kamil Żurek',
-  'Piotr Sch',
-  'Ilona Glinka'
-];
-
-function setDot(state, text) {
-  const d = document.getElementById('dot');
-  const t = document.getElementById('sync-text');
-  d.className = 'dot ' + state;
-  t.textContent = text;
+function setDot(state,text){
+  document.getElementById('dot').className='dot '+state;
+  document.getElementById('sync-text').textContent=text;
 }
 
-async function loadData() {
-  setDot('busy', 'ładowanie...');
-  try {
-    const r = await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}/latest`, {
-      headers: { 'X-Master-Key': API_KEY }
+async function loadData(){
+  setDot('busy','ładowanie...');
+  try{
+    const r=await fetch(SCRIPT_URL);
+    if(r.ok){scores=(await r.json()).scores||{};setDot('ok','zsynchronizowano');}
+    else setDot('err','błąd ładowania');
+  }catch(e){setDot('err','brak połączenia');}
+  renderScoring();renderSummary();
+}
+
+async function saveData(){
+  setDot('busy','zapisywanie...');
+  try{
+    const r=await fetch(SCRIPT_URL,{
+      method:'POST',
+      headers:{'Content-Type':'text/plain;charset=utf-8'},
+      body:JSON.stringify({scores})
     });
-    if (r.ok) {
-      const d = await r.json();
-      scores = d.record?.scores || {};
-      setDot('ok', 'zsynchronizowano');
-    } else {
-      setDot('err', 'błąd ładowania');
-    }
-  } catch(e) {
-    setDot('err', 'brak połączenia');
-  }
-  renderScoring();
-  renderSummary();
+    if(r.ok)setDot('ok','zapisano');
+    else setDot('err','błąd zapisu');
+  }catch(e){setDot('err','błąd zapisu');}
 }
 
-async function saveData() {
-  if (!BIN_ID) return;
-  setDot('busy', 'zapisywanie...');
-  try {
-    const r = await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-        'X-Master-Key': API_KEY
-      },
-      body: JSON.stringify({ scores })
-    });
-    if (r.ok) { setDot('ok', 'zapisano'); }
-    else { setDot('err', 'błąd zapisu'); }
-  } catch(e) { setDot('err', 'brak połączenia'); }
+function queueSave(){clearTimeout(saveTimer);saveTimer=setTimeout(saveData,800);}
+
+function getTotal(juror,idx){
+  const j=scores[juror];if(!j||!j[idx])return null;
+  const vals=CRITERIA.map(c=>j[idx][c]).filter(v=>v!=null);
+  return vals.length?vals.reduce((a,b)=>a+b,0):null;
 }
 
-function queueSave() {
-  clearTimeout(saveTimer);
-  saveTimer = setTimeout(saveData, 800);
+function getGrandTotal(idx){
+  let t=0,c=0;
+  JURORS.forEach(j=>{const v=getTotal(j,idx);if(v!==null){t+=v;c++;}});
+  return c?t:null;
 }
 
-async function refreshScores() {
-  if (!BIN_ID) return;
-  try {
-    const r = await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}/latest`, {
-      headers: { 'X-Master-Key': API_KEY }
-    });
-    if (r.ok) {
-      const d = await r.json();
-      const remote = d.record?.scores || {};
-      scores = remote;
-      renderScoring();
-      renderSummary();
-      setDot('ok', 'zsynchronizowano');
-    }
-  } catch(e) {}
-}
-
-function getTotal(juror, idx) {
-  const j = scores[juror];
-  if (!j || !j[idx]) return null;
-  const vals = CRITERIA.map(c => j[idx][c]).filter(v => v !== undefined && v !== null);
-  return vals.length ? vals.reduce((a,b)=>a+b,0) : null;
-}
-
-function getGrandTotal(idx) {
-  let t = 0, c = 0;
-  JURORS.forEach(j => { const v = getTotal(j,idx); if(v!==null){t+=v;c++;} });
-  return c ? t : null;
-}
-
-function renderScoring() {
-  const container = document.getElementById('rows');
-  container.innerHTML = '';
-  PARTICIPANTS.forEach((name, idx) => {
-    const j = currentJuror;
-    const jScores = (scores[j] && scores[j][idx]) || {};
-    const tot = getTotal(j, idx);
-    const row = document.createElement('div');
-    row.className = 'grid-row';
-    row.innerHTML = `
+function renderScoring(){
+  const container=document.getElementById('rows');
+  container.innerHTML='';
+  PARTICIPANTS.forEach((name,idx)=>{
+    const jScores=(scores[currentJuror]&&scores[currentJuror][idx])||{};
+    const tot=getTotal(currentJuror,idx);
+    const row=document.createElement('div');
+    row.className='grid-row';
+    row.innerHTML=`
       <div class="row-num">${idx+1}</div>
       <div class="row-name">${name}</div>
-      ${CRITERIA.map(c => `
+      ${CRITERIA.map(c=>`
         <div class="score-cell">
-          <input class="score-input${jScores[c]!==undefined?' filled':''}" type="number" min="1" max="10"
-            value="${jScores[c]!==undefined?jScores[c]:''}"
-            placeholder="—"
-            data-idx="${idx}" data-c="${c}"
-            onchange="handleScore(this)"
-          />
-        </div>
-      `).join('')}
-      <div class="total-cell${tot!==null?' has-value':''}" id="tot-${idx}">${tot!==null?tot:'—'}</div>
-    `;
+          <input class="score-input${jScores[c]!=null?' filled':''}" type="number" min="1" max="10"
+            value="${jScores[c]!=null?jScores[c]:''}" placeholder="—"
+            data-idx="${idx}" data-c="${c}" onchange="handleScore(this)"/>
+        </div>`).join('')}
+      <div class="total-cell${tot!==null?' has-value':''}" id="tot-${idx}">${tot!==null?tot:'—'}</div>`;
     container.appendChild(row);
   });
 }
 
-function handleScore(input) {
-  const idx = parseInt(input.dataset.idx);
-  const c = input.dataset.c;
-  let val = parseInt(input.value);
-  if (isNaN(val) || input.value === '') {
-    input.value = '';
-    input.classList.remove('filled');
-    if (scores[currentJuror] && scores[currentJuror][idx]) {
-      delete scores[currentJuror][idx][c];
-    }
-  } else {
-    val = Math.min(10, Math.max(1, val));
-    input.value = val;
-    input.classList.add('filled');
-    if (!scores[currentJuror]) scores[currentJuror] = {};
-    if (!scores[currentJuror][idx]) scores[currentJuror][idx] = {};
-    scores[currentJuror][idx][c] = val;
+function handleScore(input){
+  const idx=parseInt(input.dataset.idx),c=input.dataset.c;
+  let val=parseInt(input.value);
+  if(isNaN(val)||input.value===''){
+    input.value='';input.classList.remove('filled');
+    if(scores[currentJuror]?.[idx])delete scores[currentJuror][idx][c];
+  }else{
+    val=Math.min(10,Math.max(1,val));input.value=val;input.classList.add('filled');
+    if(!scores[currentJuror])scores[currentJuror]={};
+    if(!scores[currentJuror][idx])scores[currentJuror][idx]={};
+    scores[currentJuror][idx][c]=val;
   }
-  const tot = getTotal(currentJuror, idx);
-  const totEl = document.getElementById('tot-'+idx);
-  if (totEl) {
-    totEl.textContent = tot !== null ? tot : '—';
-    totEl.className = 'total-cell' + (tot !== null ? ' has-value' : '');
-  }
-  renderSummary();
-  queueSave();
+  const tot=getTotal(currentJuror,idx),el=document.getElementById('tot-'+idx);
+  if(el){el.textContent=tot!==null?tot:'—';el.className='total-cell'+(tot!==null?' has-value':'');}
+  renderSummary();queueSave();
 }
 
-function renderSummary() {
-  const container = document.getElementById('sum-rows');
-  const ranked = PARTICIPANTS.map((name, idx) => {
-    const grand = getGrandTotal(idx);
-    const jurorTotals = JURORS.map(j => getTotal(j, idx));
-    return { name, idx, grand, jurorTotals };
-  }).sort((a,b) => (b.grand||0) - (a.grand||0));
-
-  container.innerHTML = ranked.map((r, rank) => `
+function renderSummary(){
+  const ranked=PARTICIPANTS.map((name,idx)=>({
+    name,idx,grand:getGrandTotal(idx),
+    jurorTotals:JURORS.map(j=>getTotal(j,idx))
+  })).sort((a,b)=>(b.grand||0)-(a.grand||0));
+  document.getElementById('sum-rows').innerHTML=ranked.map((r,rank)=>`
     <div class="sum-row">
       <div class="rank">${rank+1}</div>
       <div class="sum-name">${r.name}</div>
-      ${r.jurorTotals.map(t => `<div class="sum-score${t!==null?' filled':''}">${t!==null?t:'—'}</div>`).join('')}
+      ${r.jurorTotals.map(t=>`<div class="sum-score${t!==null?' filled':''}">${t!==null?t:'—'}</div>`).join('')}
       <div class="grand-total">${r.grand!==null?r.grand:'—'}</div>
-    </div>
-  `).join('');
+    </div>`).join('');
 }
 
-function setView(juror, btn) {
-  document.querySelectorAll('.juror-btn').forEach(b => b.classList.remove('active'));
+function setView(juror,btn){
+  document.querySelectorAll('.juror-btn').forEach(b=>b.classList.remove('active'));
   btn.classList.add('active');
-
-  if (juror === '__summary__') {
+  if(juror==='__summary__'){
     document.getElementById('view-scoring').classList.remove('active');
     document.getElementById('view-summary').classList.add('active');
     renderSummary();
-  } else {
-    currentJuror = juror;
+  }else{
+    currentJuror=juror;
     document.getElementById('view-summary').classList.remove('active');
     document.getElementById('view-scoring').classList.add('active');
     renderScoring();
@@ -442,7 +244,7 @@ function setView(juror, btn) {
 }
 
 loadData();
-setInterval(refreshScores, 10000);
+setInterval(()=>{if(document.visibilityState==='visible')loadData();},10000);
 </script>
 </body>
 </html>
